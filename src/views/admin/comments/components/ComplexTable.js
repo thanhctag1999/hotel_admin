@@ -21,7 +21,7 @@ import {
   Input,
   Textarea,
   useDisclosure,
-  useToast, // Import Chakra UI toast for notifications
+  useToast,
 } from '@chakra-ui/react';
 import {
   createColumnHelper,
@@ -44,20 +44,15 @@ export default function ComplexTable(props) {
   const borderColor = useColorModeValue('gray.200', 'whiteAlpha.100');
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [selectedRowData, setSelectedRowData] = React.useState({});
-  const [isSubmitting, setIsSubmitting] = React.useState(false); // State for loading spinner
-  const toast = useToast(); // Chakra UI toast for notifications
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
+  const toast = useToast();
 
   const columns = [
-    columnHelper.accessor('service_name', {
-      id: 'service_name',
+    columnHelper.accessor('user_name', {
+      id: 'user_name',
       header: () => (
-        <Text
-          justifyContent="space-between"
-          align="center"
-          fontSize={{ sm: '10px', lg: '12px' }}
-          color="gray.400"
-        >
-          Service Name
+        <Text fontSize={{ sm: '10px', lg: '12px' }} color="gray.400">
+          User Name
         </Text>
       ),
       cell: (info) => (
@@ -68,16 +63,24 @@ export default function ComplexTable(props) {
         </Flex>
       ),
     }),
-    columnHelper.accessor('description', {
-      id: 'description',
+    columnHelper.accessor('hotel_name', {
+      id: 'hotel_name',
       header: () => (
-        <Text
-          justifyContent="space-between"
-          align="center"
-          fontSize={{ sm: '10px', lg: '12px' }}
-          color="gray.400"
-        >
-          Description
+        <Text fontSize={{ sm: '10px', lg: '12px' }} color="gray.400">
+          Hotel Name
+        </Text>
+      ),
+      cell: (info) => (
+        <Text color={textColor} fontSize="sm" fontWeight="700">
+          {info.getValue()}
+        </Text>
+      ),
+    }),
+    columnHelper.accessor('comment_text', {
+      id: 'comment_text',
+      header: () => (
+        <Text fontSize={{ sm: '10px', lg: '12px' }} color="gray.400">
+          Comment
         </Text>
       ),
       cell: (info) => (
@@ -89,12 +92,7 @@ export default function ComplexTable(props) {
     columnHelper.accessor('createdAt', {
       id: 'createdAt',
       header: () => (
-        <Text
-          justifyContent="space-between"
-          align="center"
-          fontSize={{ sm: '10px', lg: '12px' }}
-          color="gray.400"
-        >
+        <Text fontSize={{ sm: '10px', lg: '12px' }} color="gray.400">
           Created At
         </Text>
       ),
@@ -107,12 +105,7 @@ export default function ComplexTable(props) {
     columnHelper.accessor('updatedAt', {
       id: 'updatedAt',
       header: () => (
-        <Text
-          justifyContent="space-between"
-          align="center"
-          fontSize={{ sm: '10px', lg: '12px' }}
-          color="gray.400"
-        >
+        <Text fontSize={{ sm: '10px', lg: '12px' }} color="gray.400">
           Updated At
         </Text>
       ),
@@ -151,73 +144,16 @@ export default function ComplexTable(props) {
     });
   };
 
-  const handleSubmit = async () => {
-    setIsSubmitting(true); // Show spinner
+  const handleDelete = async (comment) => {
     try {
-      const token = localStorage.getItem('token');
-      const response = await axios.put(
-        `https://api-tltn.onrender.com/api/v1/service/admin/update/${selectedRowData.id}`,
-        {
-          service_name: selectedRowData.service_name,
-          description: selectedRowData.description,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        },
-      );
-
-      if (response.status === 200) {
-        toast({
-          title: 'Success!',
-          description: 'Service updated successfully.',
-          status: 'success',
-          duration: 3000,
-          isClosable: true,
-        });
-        refreshTable(); // Refresh the table after successful update
-      } else {
-        toast({
-          title: 'Error!',
-          description: 'Failed to update service. Please try again.',
-          status: 'error',
-          duration: 3000,
-          isClosable: true,
-        });
-      }
-    } catch (error) {
-      toast({
-        title: 'Error!',
-        description: 'An error occurred while updating the service.',
-        status: 'error',
-        duration: 3000,
-        isClosable: true,
-      });
-    } finally {
-      setIsSubmitting(false); // Hide spinner
-      onClose();
-    }
-  };
-
-
-
-  const handleDelete = async (service) => {
-    try {
-      const token = localStorage.getItem('token');
       const response = await axios.get(
-        `http://localhost:3000/api/v1/service/remove/${service.id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        },
+        `http://localhost:3000/api/v1/comment/delete/${comment.id}`,
       );
 
       if (response.status === 200) {
         toast({
           title: 'Deleted!',
-          description: 'Service deleted successfully.',
+          description: 'Comment deleted successfully.',
           status: 'success',
           duration: 3000,
           isClosable: true,
@@ -226,24 +162,23 @@ export default function ComplexTable(props) {
       } else {
         toast({
           title: 'Error!',
-          description: 'Failed to delete service. Please try again.',
+          description: 'Failed to delete comment. Please try again.',
           status: 'error',
           duration: 3000,
           isClosable: true,
         });
       }
     } catch (error) {
-      console.error('Error while deleting service:', error); // Added logging for better debugging
+      console.error('Error while deleting comment:', error);
       toast({
         title: 'Error!',
-        description: 'An error occurred while deleting the service.',
+        description: 'An error occurred while deleting the comment.',
         status: 'error',
         duration: 3000,
         isClosable: true,
       });
     }
   };
-
 
   return (
     <Card
@@ -259,7 +194,7 @@ export default function ComplexTable(props) {
           fontWeight="700"
           lineHeight="100%"
         >
-          List services
+          List Comments
         </Text>
         <Menu />
       </Flex>
@@ -315,9 +250,8 @@ export default function ComplexTable(props) {
                   {row.getVisibleCells().map((cell) => (
                     <Td
                       key={cell.id}
-                      fontSize={{ sm: '14px' }}
-                      minW={{ sm: '150px', md: '200px', lg: 'auto' }}
-                      borderColor="transparent"
+                      borderColor={borderColor}
+                      onClick={() => handleRowClick(row)}
                     >
                       {flexRender(
                         cell.column.columnDef.cell,
@@ -327,16 +261,7 @@ export default function ComplexTable(props) {
                   ))}
                   <Td>
                     <Button
-                      className="mr-10"
-                      colorScheme="blue"
-                      size="sm"
-                      onClick={() => handleRowClick(row)}
-                    >
-                      Edit
-                    </Button>
-                    <Button
                       colorScheme="red"
-                      size="sm"
                       onClick={() => handleDelete(row.original)}
                     >
                       Delete
@@ -348,43 +273,6 @@ export default function ComplexTable(props) {
           </Table>
         )}
       </Box>
-
-      <Modal isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Edit Service</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <Input
-              placeholder="Service Name"
-              name="service_name"
-              value={selectedRowData.service_name || ''}
-              onChange={handleInputChange}
-              mb="4"
-            />
-            <Textarea
-              placeholder="Description"
-              name="description"
-              value={selectedRowData.description || ''}
-              onChange={handleInputChange}
-              mb="4"
-            />
-          </ModalBody>
-          <ModalFooter>
-            <Button
-              colorScheme="blue"
-              mr={3}
-              onClick={handleSubmit}
-              isLoading={isSubmitting}
-            >
-              Save
-            </Button>
-            <Button variant="ghost" onClick={onClose}>
-              Cancel
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
     </Card>
   );
 }

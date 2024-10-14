@@ -4,14 +4,18 @@ import {
   MdEmojiFoodBeverage,
   MdHome,
   MdLock,
-  MdHotel ,
+  MdHotel,
   MdPerson,
+  MdSupervisorAccount,
+  MdModeComment,
 } from 'react-icons/md';
 
 // Admin Imports
 import MainDashboard from 'views/admin/default';
 import Hotels from 'views/admin/hotels';
 import HotelDetails from 'views/admin/hotels/detail.js';
+import Users from 'views/admin/users';
+import Comments from 'views/admin/comments';
 import Profile from 'views/admin/profile';
 import RTL from 'views/admin/rtl';
 import Services from 'views/admin/services';
@@ -31,14 +35,7 @@ const routes = [
     name: 'Manage Hotels',
     layout: '/admin',
     path: '/hotels',
-    icon: (
-      <Icon
-        as={MdHotel }
-        width="20px"
-        height="20px"
-        color="inherit"
-      />
-    ),
+    icon: <Icon as={MdHotel} width="20px" height="20px" color="inherit" />,
     component: <Hotels />,
     secondary: true,
   },
@@ -51,7 +48,14 @@ const routes = [
   {
     name: 'Services',
     layout: '/admin',
-    icon: <Icon as={MdEmojiFoodBeverage } width="20px" height="20px" color="inherit" />,
+    icon: (
+      <Icon
+        as={MdEmojiFoodBeverage}
+        width="20px"
+        height="20px"
+        color="inherit"
+      />
+    ),
     path: '/services',
     component: <Services />,
   },
@@ -63,12 +67,36 @@ const routes = [
     component: <Profile />,
   },
   {
-    name: 'Sign In',
+    name: 'Comments',
+    icon: (
+      <Icon as={MdModeComment} width="20px" height="20px" color="inherit" />
+    ),
+    path: '/comments',
+    component: <Comments />,
+    layout: '/admin',
+  },
+  {
+    name: 'Users',
+    icon: (
+      <Icon
+        as={MdSupervisorAccount}
+        width="20px"
+        height="20px"
+        color="inherit"
+      />
+    ),
+    path: '/users',
+    component: <Users />,
+    layout: '/admin',
+  },
+  {
+    name: 'Logout',
     layout: '/auth',
     path: '/sign-in',
     icon: <Icon as={MdLock} width="20px" height="20px" color="inherit" />,
     component: <SignInCentered />,
   },
+
   {
     name: 'RTL Admin',
     layout: '/rtl',

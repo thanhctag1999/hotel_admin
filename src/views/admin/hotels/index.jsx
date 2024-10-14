@@ -1,12 +1,12 @@
-import { Box, SimpleGrid, Flex, Button, Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, Input, Textarea, useDisclosure } from "@chakra-ui/react";
-import ComplexTable from "views/admin/hotels/components/ComplexTable";
-import { useState, useEffect } from "react";
+import { Box, Button, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, SimpleGrid, Textarea, useDisclosure } from "@chakra-ui/react";
 import axios from "axios";
+import { useEffect, useState } from "react";
+import ComplexTable from "views/admin/hotels/components/ComplexTable";
 
 export default function Settings() {
   const [tableDataComplex, setTableDataComplex] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isOpen, onClose } = useDisclosure();
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
 
@@ -35,11 +35,6 @@ export default function Settings() {
   return (
     <Box pt={{ base: "130px", md: "80px", xl: "80px" }}>
       <SimpleGrid mb="20px" columns={{ sm: 1, md: 1 }} spacing={{ base: "20px", xl: "20px" }}>
-        <Flex align="center" justifyContent="end">
-          <Button variant="brand" fontWeight="500" w="15%" h="50" mb="24px" onClick={onOpen}>
-            Add new hotel
-          </Button>
-        </Flex>
         <ComplexTable tableData={tableDataComplex} isLoading={isLoading} />
       </SimpleGrid>
 

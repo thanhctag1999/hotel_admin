@@ -11,20 +11,19 @@ export default function Settings() {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get("https://api-tltn.onrender.com/api/v1/service/list-all");
-        setIsLoading(true);
-        if (response.data.status === 200) {
-          setTableDataComplex(response.data.data);
-          setIsLoading(false);
-        }
-      } catch (error) {
-        console.error("Error fetching the services data: ", error);
+  const fetchData = async () => {
+    try {
+      const response = await axios.get("https://api-tltn.onrender.com/api/v1/service/list-all");
+      setIsLoading(true);
+      if (response.data.status === 200) {
+        setTableDataComplex(response.data.data);
+        setIsLoading(false);
       }
-    };
-
+    } catch (error) {
+      console.error("Error fetching the services data: ", error);
+    }
+  };
+  useEffect(() => {
     fetchData();
   }, []);
 
@@ -69,7 +68,7 @@ export default function Settings() {
             Add new service
           </Button>
         </Flex>
-        <ComplexTable columnsData={columnsDataComplex} tableData={tableDataComplex} isLoading={isLoading} />
+        <ComplexTable columnsData={columnsDataComplex} tableData={tableDataComplex} isLoading={isLoading} refreshTable={() => fetchData()} />
       </SimpleGrid>
 
       {/* Modal for adding a new service */}
