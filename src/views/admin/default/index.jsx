@@ -13,7 +13,9 @@ import IconBox from "components/icons/IconBox";
 import { useEffect, useState } from "react";
 import {
   MdAttachMoney,
-  MdBarChart
+  MdBarChart,
+  MdHotel,
+  MdSupervisedUserCircle
 } from "react-icons/md";
 import ComplexTable from "views/admin/default/components/ComplexTable";
 import ComplexTableService from "views/admin/default/components/ComplexTableService";
@@ -208,7 +210,7 @@ export default function UserReports() {
               h='56px'
               bg={boxBg}
               icon={
-                <Icon w='32px' h='32px' as={MdAttachMoney} color={brandColor} />
+                <Icon w='32px' h='32px' as={MdHotel} color={brandColor} />
               }
             />
           }
@@ -222,7 +224,7 @@ export default function UserReports() {
               h='56px'
               bg={boxBg}
               icon={
-                <Icon w='32px' h='32px' as={MdAttachMoney} color={brandColor} />
+                <Icon w='32px' h='32px' as={MdSupervisedUserCircle } color={brandColor} />
               }
             />
           }
