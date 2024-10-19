@@ -8,6 +8,7 @@ import {
   MdPerson,
   MdSupervisorAccount,
   MdModeComment,
+  MdBook,
 } from 'react-icons/md';
 
 // Admin Imports
@@ -16,6 +17,7 @@ import Hotels from 'views/admin/hotels';
 import HotelDetails from 'views/admin/hotels/detail.js';
 import Users from 'views/admin/users';
 import Comments from 'views/admin/comments';
+import Bookings from 'views/admin/bookings';
 import Profile from 'views/admin/profile';
 import RTL from 'views/admin/rtl';
 import Services from 'views/admin/services';
@@ -60,11 +62,11 @@ const routes = [
     component: <Services />,
   },
   {
-    name: 'Profile',
+    name: 'Bookings',
+    icon: <Icon as={MdBook} width="20px" height="20px" color="inherit" />,
+    path: '/bookings',
+    component: <Bookings />,
     layout: '/admin',
-    path: '/profile',
-    icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
-    component: <Profile />,
   },
   {
     name: 'Comments',

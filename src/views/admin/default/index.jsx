@@ -1,67 +1,172 @@
-/*!
-  _   _  ___  ____  ___ ________  _   _   _   _ ___   
- | | | |/ _ \|  _ \|_ _|__  / _ \| \ | | | | | |_ _| 
- | |_| | | | | |_) || |  / / | | |  \| | | | | || | 
- |  _  | |_| |  _ < | | / /| |_| | |\  | | |_| || |
- |_| |_|\___/|_| \_\___/____\___/|_| \_|  \___/|___|
-                                                                                                                                                                                                                                                                                                                                       
-=========================================================
-* Horizon UI - v1.1.0
-=========================================================
-
-* Product Page: https://www.horizon-ui.com/
-* Copyright 2023 Horizon UI (https://www.horizon-ui.com/)
-
-* Designed and Coded by Simmmple
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
-
-// Chakra imports
 import {
-  Avatar,
   Box,
-  Flex,
-  FormLabel,
   Icon,
-  Select,
   SimpleGrid,
-  useColorModeValue,
+  useColorModeValue
 } from "@chakra-ui/react";
 // Assets
-import Usa from "assets/img/dashboards/usa.png";
+
 // Custom components
-import MiniCalendar from "components/calendar/MiniCalendar";
+import axios from "axios";
 import MiniStatistics from "components/card/MiniStatistics";
 import IconBox from "components/icons/IconBox";
-import React from "react";
+import { useEffect, useState } from "react";
 import {
-  MdAddTask,
   MdAttachMoney,
-  MdBarChart,
-  MdFileCopy,
+  MdBarChart
 } from "react-icons/md";
-import CheckTable from "views/admin/default/components/CheckTable";
 import ComplexTable from "views/admin/default/components/ComplexTable";
-import DailyTraffic from "views/admin/default/components/DailyTraffic";
-import PieCard from "views/admin/default/components/PieCard";
-import Tasks from "views/admin/default/components/Tasks";
-import TotalSpent from "views/admin/default/components/TotalSpent";
-import WeeklyRevenue from "views/admin/default/components/WeeklyRevenue";
-import {
-  columnsDataCheck,
-  columnsDataComplex,
-} from "views/admin/default/variables/columnsData";
-import tableDataCheck from "views/admin/default/variables/tableDataCheck.json";
-import tableDataComplex from "views/admin/default/variables/tableDataComplex.json";
+import ComplexTableService from "views/admin/default/components/ComplexTableService";
+import ComplexTableUser from "views/admin/users/components/ComplexTable";
 
 export default function UserReports() {
   // Chakra Color Mode
   const brandColor = useColorModeValue("brand.500", "white");
   const boxBg = useColorModeValue("secondaryGray.300", "whiteAlpha.100");
+  const [count, setCount] = useState(0);
+  const [countHotel, setCountHotel] = useState(0);
+  const [countUser, setCountUser] = useState(0);
+  const [total, setTotal] = useState(0);
+  const [tableDataComplex, setTableDataComplex] = useState([]);
+  const [tableDataComplexUser, setTableDataComplexUser] = useState([]);
+  const [tableDataComplexSevice, setTableDataComplexService] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null); // State for error handling
+
+
+  useEffect(() => {
+    const fetchCountBooking = async () => {
+      setIsLoading(true); // Start loading
+      try {
+        const response = await axios.get("http://localhost:3000/api/v1/booking/count")
+        if (response.data.status === 200) {
+          setCount(response.data.data);
+        } else {
+          setError("Failed to fetch data"); // Handle unexpected status
+        }
+      } catch (error) {
+        setError("Error fetching the hotel data"); // Set error message
+      } finally {
+        setIsLoading(false); // Stop loading
+      }
+    };
+
+    const fetchCountHotel = async () => {
+      setIsLoading(true); // Start loading
+      try {
+        const response = await axios.get("http://localhost:3000/api/v1/hotel/count")
+        if (response.data.status === 200) {
+          setCountHotel(response.data.data);
+        } else {
+          setError("Failed to fetch data"); // Handle unexpected status
+        }
+      } catch (error) {
+        setError("Error fetching the hotel data"); // Set error message
+      } finally {
+        setIsLoading(false); // Stop loading
+      }
+    };
+
+    const fetchCountUser = async () => {
+      setIsLoading(true); // Start loading
+      try {
+        const response = await axios.get("http://localhost:3000/api/v1/user/count")
+        if (response.data.status === 200) {
+          setCountUser(response.data.data);
+        } else {
+          setError("Failed to fetch data"); // Handle unexpected status
+        }
+      } catch (error) {
+        setError("Error fetching the hotel data"); // Set error message
+      } finally {
+        setIsLoading(false); // Stop loading
+      }
+    };
+    const fetchTotalPrice = async () => {
+      setIsLoading(true); // Start loading
+      try {
+        const token = localStorage.getItem('token'); // Retrieve the token from local storage
+        const response = await axios.get("http://localhost:3000/api/v1/booking/getIncome", {
+          headers: {
+            Authorization: `Bearer ${token}`, // Include the token in the headers
+          },
+        });
+        if (response.data.status === 200) {
+          setTotal(response.data.data);
+        } else {
+          setError("Failed to fetch data"); // Handle unexpected status
+        }
+      } catch (error) {
+        setError("Error fetching the hotel data"); // Set error message
+      } finally {
+        setIsLoading(false); // Stop loading
+      }
+    };
+
+    const fetchDataBooking = async () => {
+      setIsLoading(true); // Start loading
+      try {
+        const response = await axios.get("http://localhost:3000/api/v1/booking/getAll");
+        if (response.data.status === 200) {
+          setTableDataComplex(response.data.data);
+        } else {
+          setError("Failed to fetch data"); // Handle unexpected status
+        }
+      } catch (error) {
+        setError("Error fetching the hotel data"); // Set error message
+      } finally {
+        setIsLoading(false); // Stop loading
+      }
+    };
+
+    const fetchDataUser = async () => {
+      setIsLoading(true); // Start loading
+      try {
+        const token = localStorage.getItem('token'); // Retrieve the token from local storage
+        const response = await axios.get("http://localhost:3000/api/v1/user/getAll", {
+          headers: {
+            Authorization: `Bearer ${token}`, // Include the token in the headers
+          },
+        });
+        if (response.data.status === 200) {
+          setTableDataComplexUser(response.data.data);
+        } else {
+          setError("Failed to fetch data"); // Handle unexpected status
+        }
+      } catch (error) {
+        setError("Error fetching the hotel data"); // Set error message
+      } finally {
+        setIsLoading(false); // Stop loading
+      }
+    };
+
+    const fetchDataService = async () => {
+    try {
+      const response = await axios.get("https://api-tltn.onrender.com/api/v1/service/list-all");
+      setIsLoading(true);
+      if (response.data.status === 200) {
+        setTableDataComplexService(response.data.data);
+        setIsLoading(false);
+      }
+    } catch (error) {
+      console.error("Error fetching the services data: ", error);
+    }
+  };
+
+    fetchCountBooking();
+    fetchCountHotel();
+    fetchTotalPrice();
+    fetchDataBooking();
+    fetchDataUser();
+    fetchCountUser();
+    fetchDataService();
+
+    // Optional: return a cleanup function if needed
+    return () => {
+      setCount(0); // Clean up state if component unmounts
+    };
+  }, []);
+
   return (
     <Box pt={{ base: "130px", md: "80px", xl: "80px" }}>
       <SimpleGrid
@@ -79,8 +184,8 @@ export default function UserReports() {
               }
             />
           }
-          name='Earnings'
-          value='$350.4'
+          name='Booking'
+          value={count}
         />
         <MiniStatistics
           startContent={
@@ -93,42 +198,8 @@ export default function UserReports() {
               }
             />
           }
-          name='Spend this month'
-          value='$642.39'
-        />
-        <MiniStatistics growth='+23%' name='Sales' value='$574.34' />
-        <MiniStatistics
-          endContent={
-            <Flex me='-16px' mt='10px'>
-              <FormLabel htmlFor='balance'>
-                <Avatar src={Usa} />
-              </FormLabel>
-              <Select
-                id='balance'
-                variant='mini'
-                mt='5px'
-                me='0px'
-                defaultValue='usd'>
-                <option value='usd'>USD</option>
-                <option value='eur'>EUR</option>
-                <option value='gba'>GBA</option>
-              </Select>
-            </Flex>
-          }
-          name='Your balance'
-          value='$1,000'
-        />
-        <MiniStatistics
-          startContent={
-            <IconBox
-              w='56px'
-              h='56px'
-              bg='linear-gradient(90deg, #4481EB 0%, #04BEFE 100%)'
-              icon={<Icon w='28px' h='28px' as={MdAddTask} color='white' />}
-            />
-          }
-          name='New Tasks'
-          value='154'
+          name='Income'
+          value={total}
         />
         <MiniStatistics
           startContent={
@@ -137,35 +208,35 @@ export default function UserReports() {
               h='56px'
               bg={boxBg}
               icon={
-                <Icon w='32px' h='32px' as={MdFileCopy} color={brandColor} />
+                <Icon w='32px' h='32px' as={MdAttachMoney} color={brandColor} />
               }
             />
           }
-          name='Total Projects'
-          value='2935'
+          name='Hotel'
+          value={countHotel}
+        />
+        <MiniStatistics
+          startContent={
+            <IconBox
+              w='56px'
+              h='56px'
+              bg={boxBg}
+              icon={
+                <Icon w='32px' h='32px' as={MdAttachMoney} color={brandColor} />
+              }
+            />
+          }
+          name='User'
+          value={countUser}
         />
       </SimpleGrid>
 
-      <SimpleGrid columns={{ base: 1, md: 2, xl: 2 }} gap='20px' mb='20px'>
-        <TotalSpent />
-        <WeeklyRevenue />
+      <SimpleGrid columns={{ base: 1, md: 1, xl: 1 }} gap='20px' mb='20px'>
+        <ComplexTable tableData={tableDataComplex} isLoading={isLoading} />
       </SimpleGrid>
       <SimpleGrid columns={{ base: 1, md: 1, xl: 2 }} gap='20px' mb='20px'>
-        <CheckTable columnsData={columnsDataCheck} tableData={tableDataCheck} />
-        <SimpleGrid columns={{ base: 1, md: 2, xl: 2 }} gap='20px'>
-          <DailyTraffic />
-          <PieCard />
-        </SimpleGrid>
-      </SimpleGrid>
-      <SimpleGrid columns={{ base: 1, md: 1, xl: 2 }} gap='20px' mb='20px'>
-        <ComplexTable
-          columnsData={columnsDataComplex}
-          tableData={tableDataComplex}
-        />
-        <SimpleGrid columns={{ base: 1, md: 2, xl: 2 }} gap='20px'>
-          <Tasks />
-          <MiniCalendar h='100%' minW='100%' selectRange={false} />
-        </SimpleGrid>
+        <ComplexTableUser tableData={tableDataComplexUser} isLoading={isLoading} />
+         <ComplexTableService tableData={tableDataComplexSevice} isLoading={isLoading} />
       </SimpleGrid>
     </Box>
   );
