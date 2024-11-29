@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import ComplexTable from "views/admin/hotels/components/ComplexTable";
 
 export default function Settings() {
+  const API_URL = process.env.REACT_APP_API;
   const [tableDataComplex, setTableDataComplex] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const { isOpen, onClose } = useDisclosure();
@@ -13,7 +14,7 @@ export default function Settings() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("https://api-tltn.onrender.com/api/v1/hotel/list-all");
+        const response = await axios.get(`${API_URL}/api/v1/hotel/list-all`);
         if (response.data.status === 200) {
           setTableDataComplex(response.data.data);
         }

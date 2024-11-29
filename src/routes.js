@@ -7,6 +7,7 @@ import {
   MdHotel,
   MdPerson,
   MdSupervisorAccount,
+  MdCardGiftcard,
   MdModeComment,
   MdBook,
 } from 'react-icons/md';
@@ -17,6 +18,7 @@ import Hotels from 'views/admin/hotels';
 import HotelDetails from 'views/admin/hotels/detail.js';
 import Users from 'views/admin/users';
 import Comments from 'views/admin/comments';
+import Promotions from 'views/admin/promotions';
 import Bookings from 'views/admin/bookings';
 import Services from 'views/admin/services';
 
@@ -73,6 +75,15 @@ const routes = [
     ),
     path: '/comments',
     component: <Comments />,
+    layout: '/admin',
+  },
+  {
+    name: 'Promotions',
+    icon: (
+      <Icon as={MdCardGiftcard} width="20px" height="20px" color="inherit" />
+    ),
+    path: '/promotions',
+    component: <Promotions />,
     layout: '/admin',
   },
   {

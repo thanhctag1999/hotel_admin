@@ -1,8 +1,9 @@
+/* eslint-disable */
+
 import {
-  Box,
   Flex,
+  Box,
   Table,
-  Spinner,
   Tbody,
   Td,
   Text,
@@ -10,19 +11,9 @@ import {
   Thead,
   Tr,
   useColorModeValue,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalBody,
-  ModalCloseButton,
-  Button,
-  Input,
-  Textarea,
-  useDisclosure,
-  useToast, // Import Chakra UI toast for notifications
 } from '@chakra-ui/react';
+import * as React from 'react';
+
 import {
   createColumnHelper,
   flexRender,
@@ -30,26 +21,23 @@ import {
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table';
+
+// Custom components
 import Card from 'components/card/Card';
 import Menu from 'components/menu/MainMenu';
-import * as React from 'react';
-import axios from 'axios';
 
 const columnHelper = createColumnHelper();
 
-export default function ComplexTable(props) {
-  const { tableData, isLoading, refreshTable } = props;
+// const columns = columnsDataCheck;
+export default function ColumnTable(props) {
+  const { tableData } = props;
   const [sorting, setSorting] = React.useState([]);
   const textColor = useColorModeValue('secondaryGray.900', 'white');
   const borderColor = useColorModeValue('gray.200', 'whiteAlpha.100');
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const [selectedRowData, setSelectedRowData] = React.useState({});
-  const [isSubmitting, setIsSubmitting] = React.useState(false); // State for loading spinner
-  const toast = useToast(); // Chakra UI toast for notifications
-
+  let defaultData = tableData;
   const columns = [
-    columnHelper.accessor('service_name', {
-      id: 'service_name',
+    columnHelper.accessor('name', {
+      id: 'name',
       header: () => (
         <Text
           justifyContent="space-between"
@@ -57,7 +45,7 @@ export default function ComplexTable(props) {
           fontSize={{ sm: '10px', lg: '12px' }}
           color="gray.400"
         >
-          Service Name
+          NAME
         </Text>
       ),
       cell: (info) => (
@@ -68,8 +56,8 @@ export default function ComplexTable(props) {
         </Flex>
       ),
     }),
-    columnHelper.accessor('description', {
-      id: 'description',
+    columnHelper.accessor('progress', {
+      id: 'progress',
       header: () => (
         <Text
           justifyContent="space-between"
@@ -77,7 +65,7 @@ export default function ComplexTable(props) {
           fontSize={{ sm: '10px', lg: '12px' }}
           color="gray.400"
         >
-          Description
+          PROGRESS
         </Text>
       ),
       cell: (info) => (
@@ -86,8 +74,8 @@ export default function ComplexTable(props) {
         </Text>
       ),
     }),
-    columnHelper.accessor('createdAt', {
-      id: 'createdAt',
+    columnHelper.accessor('quantity', {
+      id: 'quantity',
       header: () => (
         <Text
           justifyContent="space-between"
@@ -95,23 +83,37 @@ export default function ComplexTable(props) {
           fontSize={{ sm: '10px', lg: '12px' }}
           color="gray.400"
         >
-          Created At
+          QUANTITY
         </Text>
       ),
       cell: (info) => (
         <Text color={textColor} fontSize="sm" fontWeight="700">
-          {new Date(info.getValue()).toLocaleDateString('vi-VN')}
+          {info.getValue()}
         </Text>
       ),
     }),
-    {
-      id: 'actions',
-      header: () => <></>,
-    },
+    columnHelper.accessor('date', {
+      id: 'date',
+      header: () => (
+        <Text
+          justifyContent="space-between"
+          align="center"
+          fontSize={{ sm: '10px', lg: '12px' }}
+          color="gray.400"
+        >
+          DATE
+        </Text>
+      ),
+      cell: (info) => (
+        <Text color={textColor} fontSize="sm" fontWeight="700">
+          {info.getValue()}
+        </Text>
+      ),
+    }),
   ];
-
+  const [data, setData] = React.useState(() => [...defaultData]);
   const table = useReactTable({
-    data: tableData,
+    data,
     columns,
     state: {
       sorting,
@@ -119,8 +121,8 @@ export default function ComplexTable(props) {
     onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
+    debugTable: true,
   });
-
   return (
     <Card
       flexDirection="column"
@@ -132,30 +134,21 @@ export default function ComplexTable(props) {
         <Text
           color={textColor}
           fontSize="22px"
+          mb="4px"
           fontWeight="700"
           lineHeight="100%"
         >
-          List services
+          4-Columns Table
         </Text>
         <Menu />
       </Flex>
       <Box>
-        {isLoading ? (
-          <Flex justify="center" align="center" height="200px">
-            <Spinner
-              size="lg"
-              thickness="4px"
-              speed="0.65s"
-              emptyColor="gray.200"
-              color="blue.500"
-            />
-          </Flex>
-        ) : (
-          <Table variant="simple" color="gray.500" mb="24px" mt="12px">
-            <Thead>
-              {table.getHeaderGroups().map((headerGroup) => (
-                <Tr key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => (
+        <Table variant="simple" color="gray.500" mb="24px" mt="12px">
+          <Thead>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <Tr key={headerGroup.id}>
+                {headerGroup.headers.map((header) => {
+                  return (
                     <Th
                       key={header.id}
                       colSpan={header.colSpan}
@@ -174,38 +167,44 @@ export default function ComplexTable(props) {
                           header.column.columnDef.header,
                           header.getContext(),
                         )}
-                        {header.column.getIsSorted()
-                          ? header.column.getIsSorted() === 'asc'
-                            ? ' 🔼'
-                            : ' 🔽'
-                          : null}
+                        {{
+                          asc: '',
+                          desc: '',
+                        }[header.column.getIsSorted()] ?? null}
                       </Flex>
                     </Th>
-                  ))}
-                </Tr>
-              ))}
-            </Thead>
-            <Tbody>
-              {table.getRowModel().rows.map((row) => (
-                <Tr key={row.id} cursor="pointer">
-                  {row.getVisibleCells().map((cell) => (
-                    <Td
-                      key={cell.id}
-                      fontSize={{ sm: '14px' }}
-                      minW={{ sm: '150px', md: '200px', lg: 'auto' }}
-                      borderColor="transparent"
-                    >
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
-                      )}
-                    </Td>
-                  ))}
-                </Tr>
-              ))}
-            </Tbody>
-          </Table>
-        )}
+                  );
+                })}
+              </Tr>
+            ))}
+          </Thead>
+          <Tbody>
+            {table
+              .getRowModel()
+              .rows.slice(0, 11)
+              .map((row) => {
+                return (
+                  <Tr key={row.id}>
+                    {row.getVisibleCells().map((cell) => {
+                      return (
+                        <Td
+                          key={cell.id}
+                          fontSize={{ sm: '14px' }}
+                          minW={{ sm: '150px', md: '200px', lg: 'auto' }}
+                          borderColor="transparent"
+                        >
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext(),
+                          )}
+                        </Td>
+                      );
+                    })}
+                  </Tr>
+                );
+              })}
+          </Tbody>
+        </Table>
       </Box>
     </Card>
   );

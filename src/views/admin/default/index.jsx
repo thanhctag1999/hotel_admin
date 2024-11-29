@@ -22,6 +22,7 @@ import ComplexTableService from "views/admin/default/components/ComplexTableServ
 import ComplexTableUser from "views/admin/users/components/ComplexTable";
 
 export default function UserReports() {
+  const API_URL = process.env.REACT_APP_API;
   // Chakra Color Mode
   const brandColor = useColorModeValue("brand.500", "white");
   const boxBg = useColorModeValue("secondaryGray.300", "whiteAlpha.100");
@@ -35,12 +36,22 @@ export default function UserReports() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null); // State for error handling
 
+  const formatPriceVND = (price) => {
+    return new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND',
+    }).format(price);
+  };
+
 
   useEffect(() => {
     const fetchCountBooking = async () => {
       setIsLoading(true); // Start loading
       try {
-        const response = await axios.get("http://localhost:3000/api/v1/booking/count")
+        const token = localStorage.getItem('token');
+        const response = await axios.get(`${API_URL}/api/v1/booking/count`, {
+          headers: { Authorization: `Bearer ${token}` },
+        })
         if (response.data.status === 200) {
           setCount(response.data.data);
         } else {
@@ -56,7 +67,10 @@ export default function UserReports() {
     const fetchCountHotel = async () => {
       setIsLoading(true); // Start loading
       try {
-        const response = await axios.get("http://localhost:3000/api/v1/hotel/count")
+        const token = localStorage.getItem('token');
+        const response = await axios.get(`${API_URL}/api/v1/hotel/count`, {
+          headers: { Authorization: `Bearer ${token}` },
+        })
         if (response.data.status === 200) {
           setCountHotel(response.data.data);
         } else {
@@ -72,7 +86,10 @@ export default function UserReports() {
     const fetchCountUser = async () => {
       setIsLoading(true); // Start loading
       try {
-        const response = await axios.get("http://localhost:3000/api/v1/user/count")
+        const token = localStorage.getItem('token');
+        const response = await axios.get(`${API_URL}/api/v1/user/count`, {
+          headers: { Authorization: `Bearer ${token}` },
+        })
         if (response.data.status === 200) {
           setCountUser(response.data.data);
         } else {
@@ -88,13 +105,13 @@ export default function UserReports() {
       setIsLoading(true); // Start loading
       try {
         const token = localStorage.getItem('token'); // Retrieve the token from local storage
-        const response = await axios.get("http://localhost:3000/api/v1/booking/getIncome", {
+        const response = await axios.get(`${API_URL}/api/v1/booking/getIncome`, {
           headers: {
             Authorization: `Bearer ${token}`, // Include the token in the headers
           },
         });
         if (response.data.status === 200) {
-          setTotal(response.data.data);
+          setTotal(formatPriceVND(response.data.data));
         } else {
           setError("Failed to fetch data"); // Handle unexpected status
         }
@@ -108,7 +125,12 @@ export default function UserReports() {
     const fetchDataBooking = async () => {
       setIsLoading(true); // Start loading
       try {
-        const response = await axios.get("http://localhost:3000/api/v1/booking/getAll");
+        const token = localStorage.getItem('token'); // Retrieve the token from local storage
+        const response = await axios.get(`${API_URL}/api/v1/booking/getAll`,  {
+          headers: {
+            Authorization: `Bearer ${token}`, // Include the token in the headers
+          },
+        });
         if (response.data.status === 200) {
           setTableDataComplex(response.data.data);
         } else {
@@ -125,7 +147,7 @@ export default function UserReports() {
       setIsLoading(true); // Start loading
       try {
         const token = localStorage.getItem('token'); // Retrieve the token from local storage
-        const response = await axios.get("http://localhost:3000/api/v1/user/getAll", {
+        const response = await axios.get(`${API_URL}/api/v1/user/getAll`, {
           headers: {
             Authorization: `Bearer ${token}`, // Include the token in the headers
           },
@@ -143,8 +165,13 @@ export default function UserReports() {
     };
 
     const fetchDataService = async () => {
-    try {
-      const response = await axios.get("https://api-tltn.onrender.com/api/v1/service/list-all");
+      try {
+      const token = localStorage.getItem('token'); // Retrieve the token from local storage
+      const response = await axios.get("`${API_URL}/api/v1/service/list`all",  {
+          headers: {
+            Authorization: `Bearer ${token}`, // Include the token in the headers
+          },
+        });
       setIsLoading(true);
       if (response.data.status === 200) {
         setTableDataComplexService(response.data.data);

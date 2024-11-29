@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 
 export default function Settings() {
+  const API_URL = process.env.REACT_APP_API;
   const [tableDataComplex, setTableDataComplex] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -13,7 +14,7 @@ export default function Settings() {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get("https://api-tltn.onrender.com/api/v1/service/list-all");
+      const response = await axios.get(`${API_URL}/api/v1/service/list-all`);
       setIsLoading(true);
       if (response.data.status === 200) {
         setTableDataComplex(response.data.data);
@@ -30,7 +31,7 @@ export default function Settings() {
   const handleCreate = async () => {
     try {
     const token = localStorage.getItem("token");
-    const response = await axios.post("https://api-tltn.onrender.com/api/v1/service/admin/create", {
+    const response = await axios.post(`${API_URL}/api/v1/service/create`, {
       service_name: name,
       description: description,
     },{
@@ -43,7 +44,7 @@ export default function Settings() {
       // Show success message
       alert("Service created successfully!");
       // Optionally, refresh the service list to include the new service
-      const updatedServices = await axios.get("https://api-tltn.onrender.com/api/v1/service/list-all");
+      const updatedServices = await axios.get(`${API_URL}/api/v1/service/list-all`);
       setTableDataComplex(updatedServices.data.data);
       setIsLoading(false);
     } else {

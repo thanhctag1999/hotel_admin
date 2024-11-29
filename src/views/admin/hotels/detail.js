@@ -14,17 +14,25 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 
 export default function HotelDetails() {
+  const API_URL = process.env.REACT_APP_API;
   const { hotelId } = useParams(); // Get hotelId from route params
   const [hotel, setHotel] = useState(null); // State to store the fetched hotel data
   const [rooms, setRooms] = useState([]); // State to store the fetched rooms data
   const [loading, setLoading] = useState(true); // State to manage loading state
   const [error, setError] = useState(null); // State to manage errors
 
+  const formatPriceVND = (price) => {
+    return new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND',
+    }).format(price);
+  };
+
  useEffect(() => {
    const fetchHotel = async () => {
      try {
        const response = await axios.get(
-         `http://localhost:3000/api/v1/hotel/findById/${hotelId}`,
+         `${API_URL}/api/v1/hotel/findById/${hotelId}`,
        );
        if (response.status === 200) {
          setHotel(response.data.data); // Set the hotel data
@@ -43,7 +51,7 @@ export default function HotelDetails() {
    const fetchRooms = async () => {
      try {
        const response = await axios.get(
-         `http://localhost:3000/api/v1/room/getRoomsByHotelId/${hotelId}`,
+         `${API_URL}/api/v1/room/getRoomsByHotelId/${hotelId}`,
        );
        if (response.status === 200) {
          setRooms(response.data.data); // Set the rooms data
@@ -151,7 +159,7 @@ export default function HotelDetails() {
               <Text fontSize="lg" fontWeight="bold">
                 Room Number: {room.room_number}
               </Text>
-              <Text>Price: {room.price} VND</Text>
+              <Text>Price: {formatPriceVND(room.price)} VND</Text>
               <Text>Description: {room.description}</Text>
               <Text>Availability: {room.availability_status}</Text>
             </GridItem>

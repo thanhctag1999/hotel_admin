@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 
 export default function Settings() {
+  const API_URL = process.env.REACT_APP_API;
   const [tableDataComplex, setTableDataComplex] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -13,7 +14,12 @@ export default function Settings() {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get("http://localhost:3000/api/v1/comment/getAll");
+      const token = localStorage.getItem('token');
+      const response = await axios.get(`${API_URL}/api/v1/comment/getAll`, {
+          headers: {
+            Authorization: `Bearer ${token}`, // Include the token in the headers
+          },
+        });
       setIsLoading(true);
       if (response.data.status === 200) {
         setTableDataComplex(response.data.data);

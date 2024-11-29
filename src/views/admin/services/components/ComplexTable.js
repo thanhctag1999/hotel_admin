@@ -38,6 +38,7 @@ import axios from 'axios';
 const columnHelper = createColumnHelper();
 
 export default function ComplexTable(props) {
+  const API_URL = process.env.REACT_APP_API;
   const { tableData, isLoading, refreshTable } = props;
   const [sorting, setSorting] = React.useState([]);
   const textColor = useColorModeValue('secondaryGray.900', 'white');
@@ -100,7 +101,7 @@ export default function ComplexTable(props) {
       ),
       cell: (info) => (
         <Text color={textColor} fontSize="sm" fontWeight="700">
-          {new Date(info.getValue()).toLocaleString()}
+          {new Date(info.getValue()).toLocaleDateString('vi-VN')}
         </Text>
       ),
     }),
@@ -118,7 +119,7 @@ export default function ComplexTable(props) {
       ),
       cell: (info) => (
         <Text color={textColor} fontSize="sm" fontWeight="700">
-          {new Date(info.getValue()).toLocaleString()}
+          {new Date(info.getValue()).toLocaleDateString('vi-VN')}
         </Text>
       ),
     }),
@@ -206,7 +207,7 @@ export default function ComplexTable(props) {
     try {
       const token = localStorage.getItem('token');
       const response = await axios.get(
-        `http://localhost:3000/api/v1/service/remove/${service.id}`,
+        `${API_URL}/api/v1/service/remove/${service.id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

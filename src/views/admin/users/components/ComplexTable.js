@@ -42,7 +42,7 @@ export default function ComplexTable(props) {
     try {
       const token = localStorage.getItem('token');
       const response = await axios.post(
-        `http://localhost:3000/api/v1/user/block/${userId}`,
+        `https://api-tltn.onrender.com/api/v1/user/block/${userId}`,
         {},
         {
           headers: {

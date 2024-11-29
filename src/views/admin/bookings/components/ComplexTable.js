@@ -35,6 +35,13 @@ export default function ComplexTable(props) {
   const textColor = useColorModeValue('secondaryGray.900', 'white');
   const borderColor = useColorModeValue('gray.200', 'whiteAlpha.100');
 
+  const formatPriceVND = (price) => {
+    return new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND',
+    }).format(price);
+  };
+
   const columns = [
     columnHelper.accessor('id', {
       header: 'Booking ID',
@@ -64,7 +71,7 @@ export default function ComplexTable(props) {
       header: 'Totel Price',
       cell: (info) => (
         <Text color={textColor} fontSize="sm" fontWeight="700">
-          {info.getValue()}
+          {formatPriceVND(info.getValue())}
         </Text>
       ),
     }),
@@ -80,7 +87,7 @@ export default function ComplexTable(props) {
       header: 'Check in',
       cell: (info) => (
         <Text color={textColor} fontSize="sm" fontWeight="700">
-          {info.getValue() || 'N/A'}
+          {new Date(info.getValue()).toLocaleDateString('vi-VN')}
         </Text>
       ),
     }),
@@ -88,23 +95,7 @@ export default function ComplexTable(props) {
       header: 'Check Out',
       cell: (info) => (
         <Text color={textColor} fontSize="sm" fontWeight="700">
-          {info.getValue() || 'N/A'}
-        </Text>
-      ),
-    }),
-    columnHelper.accessor('createdAt', {
-      header: 'Created At',
-      cell: (info) => (
-        <Text color={textColor} fontSize="sm" fontWeight="700">
-          {new Date(info.getValue()).toLocaleString()}
-        </Text>
-      ),
-    }),
-    columnHelper.accessor('updatedAt', {
-      header: 'Updated At',
-      cell: (info) => (
-        <Text color={textColor} fontSize="sm" fontWeight="700">
-          {new Date(info.getValue()).toLocaleString()}
+          {new Date(info.getValue()).toLocaleDateString('vi-VN')}
         </Text>
       ),
     }),

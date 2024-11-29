@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import ComplexTable from "views/admin/users/components/ComplexTable";
 
 export default function Settings() {
+    const API_URL = process.env.REACT_APP_API;
   const [tableDataComplex, setTableDataComplex] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null); // State for error handling
@@ -13,7 +14,7 @@ export default function Settings() {
       setIsLoading(true); // Start loading
       try {
         const token = localStorage.getItem('token'); // Retrieve the token from local storage
-        const response = await axios.get("http://localhost:3000/api/v1/user/getAll", {
+        const response = await axios.get(`${API_URL}/api/v1/user/getAll`, {
           headers: {
             Authorization: `Bearer ${token}`, // Include the token in the headers
           },

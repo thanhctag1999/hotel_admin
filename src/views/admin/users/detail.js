@@ -24,7 +24,7 @@ export default function HotelDetails() {
    const fetchHotel = async () => {
      try {
        const response = await axios.get(
-         `http://localhost:3000/api/v1/hotel/findById/${hotelId}`,
+         `https://api-tltn.onrender.com/api/v1/hotel/findById/${hotelId}`,
        );
        if (response.status === 200) {
          setHotel(response.data.data); // Set the hotel data
@@ -43,7 +43,7 @@ export default function HotelDetails() {
    const fetchRooms = async () => {
      try {
        const response = await axios.get(
-         `http://localhost:3000/api/v1/room/getRoomsByHotelId/${hotelId}`,
+         `https://api-tltn.onrender.com/api/v1/room/getRoomsByHotelId/${hotelId}`,
        );
        if (response.status === 200) {
          setRooms(response.data.data); // Set the rooms data

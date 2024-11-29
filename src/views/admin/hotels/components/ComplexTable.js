@@ -27,6 +27,7 @@ import * as React from 'react';
 const columnHelper = createColumnHelper();
 
 export default function ComplexTable(props) {
+  const API_URL = process.env.REACT_APP_API;
   const { tableData, isLoading } = props;
   const [sorting, setSorting] = React.useState([]);
   const textColor = useColorModeValue('secondaryGray.900', 'white');
@@ -39,7 +40,7 @@ export default function ComplexTable(props) {
       header: 'Hotel Image',
       cell: (info) => (
         <Image
-          src={info.getValue()}
+          src={`${API_URL}/public/images/hotel/${info.getValue()}`}
           w={{ base: '150px', sm: '150px' }}
           h={{ base: '150px', sm: '150px' }}
           borderRadius="20px"
