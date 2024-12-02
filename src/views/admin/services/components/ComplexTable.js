@@ -157,7 +157,7 @@ export default function ComplexTable(props) {
     try {
       const token = localStorage.getItem('token');
       const response = await axios.put(
-        `https://api-tltn.onrender.com/api/v1/service/admin/update/${selectedRowData.id}`,
+        `https://api-tltn.onrender.com/api/v1/service/update/${selectedRowData.id}`,
         {
           service_name: selectedRowData.service_name,
           description: selectedRowData.description,

@@ -1,4 +1,4 @@
-import React from "react";
+import { useEffect, React } from 'react';
 import {
   Box,
   Button,
@@ -23,11 +23,19 @@ import { RiEyeCloseLine } from "react-icons/ri";
 
 function SignIn() {
   // Chakra color mode
+
   const textColor = useColorModeValue("navy.700", "white");
   const textColorSecondary = "gray.400";
   const brandStars = useColorModeValue("brand.500", "brand.400");
   const [show, setShow] = React.useState(false);
   const handleClick = () => setShow(!show);
+
+  useEffect(() => {
+    // Clear localStorage on component load
+    localStorage.clear();
+    console.log('Local storage cleared on Sign-In page load');
+  }, []);
+
   return (
     <DefaultAuth illustrationBackground={illustration} image={illustration}>
       <Flex

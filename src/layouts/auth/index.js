@@ -16,12 +16,13 @@ import {
 import illustration from 'assets/img/auth/auth.png';
 import axios from 'axios';
 import DefaultAuth from 'layouts/auth/Default';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { MdOutlineRemoveRedEye } from 'react-icons/md';
 import { RiEyeCloseLine } from 'react-icons/ri';
 import { useNavigate } from 'react-router-dom';
 
 function SignIn() {
+  const API_URL = process.env.REACT_APP_API;
   const textColor = useColorModeValue('navy.700', 'white');
   const textColorSecondary = 'gray.400';
   const brandStars = useColorModeValue('brand.500', 'brand.400');
@@ -33,16 +34,19 @@ function SignIn() {
 
   const handleClick = () => setShow(!show);
 
+  useEffect(() => {
+    // Clear localStorage on component load
+    localStorage.clear();
+    console.log('Local storage cleared on Sign-In page load');
+  }, []);
+
   const handleLogin = async () => {
     setLoading(true);
     try {
-      const response = await axios.post(
-        'http://localhost:3000/api/v1/user/loginAdmin',
-        {
-          email,
-          password,
-        },
-      );
+      const response = await axios.post(`${API_URL}/api/v1/user/loginAdmin`, {
+        email,
+        password,
+      });
 
       if (response.status === 200) {
         const { id, token, email } = response.data.data;
@@ -50,8 +54,6 @@ function SignIn() {
         localStorage.setItem('id', id);
         localStorage.setItem('token', token);
         localStorage.setItem('email', email);
-
-        // Redirect to home page
         navigate('/');
       }
     } catch (error) {

@@ -44,6 +44,11 @@ export default function ComplexTable(props) {
           w={{ base: '150px', sm: '150px' }}
           h={{ base: '150px', sm: '150px' }}
           borderRadius="20px"
+          objectFit="cover"
+          onError={(e) => {
+            e.target.src =
+              'https://grandtouranehotel.com/uploads/product/sp_55.jpg';
+          }}
         />
       ),
     }),
