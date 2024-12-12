@@ -203,7 +203,6 @@ export default function ComplexTable(props) {
         >
           List Comments
         </Text>
-        <Menu />
       </Flex>
       <Box>
         {isLoading ? (

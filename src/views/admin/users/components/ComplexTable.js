@@ -23,7 +23,6 @@ import {
 } from '@tanstack/react-table';
 import { useNavigate } from 'react-router-dom';
 import Card from 'components/card/Card';
-import Menu from 'components/menu/MainMenu';
 import * as React from 'react';
 import axios from 'axios';
 
@@ -169,7 +168,6 @@ export default function ComplexTable(props) {
         >
           List of Users
         </Text>
-        <Menu />
       </Flex>
       <Box>
         {isLoading ? (

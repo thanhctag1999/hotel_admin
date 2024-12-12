@@ -167,11 +167,7 @@ export default function UserReports() {
     const fetchDataService = async () => {
       try {
       const token = localStorage.getItem('token'); // Retrieve the token from local storage
-      const response = await axios.get("`${API_URL}/api/v1/service/list`all",  {
-          headers: {
-            Authorization: `Bearer ${token}`, // Include the token in the headers
-          },
-        });
+      const response = await axios.get(`${API_URL}/api/v1/service/list-all`);
       setIsLoading(true);
       if (response.data.status === 200) {
         setTableDataComplexService(response.data.data);

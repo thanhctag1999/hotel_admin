@@ -22,9 +22,9 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 import Card from 'components/card/Card';
-import Menu from 'components/menu/MainMenu';
 import * as React from 'react';
 import axios from 'axios';
+import { saveAs } from 'file-saver'; // Add this import
 
 const columnHelper = createColumnHelper();
 
@@ -40,6 +40,40 @@ export default function ComplexTable(props) {
       style: 'currency',
       currency: 'VND',
     }).format(price);
+  };
+
+  const exportToCSV = () => {
+    const csvHeader = [
+      'Booking ID',
+      'Username',
+      'Room Number',
+      'Total Price',
+      'Hotel',
+      'Check In',
+      'Check Out',
+      'Created At',
+      'Updated At',
+    ];
+
+    const csvRows = tableData.map((row) => [
+      row.id,
+      row.user_name,
+      row.room_number,
+      formatPriceVND(row.total_price),
+      row.hotel_name || 'N/A',
+      new Date(row.check_in_date).toLocaleDateString('vi-VN') || 'N/A',
+      new Date(row.check_out_date).toLocaleDateString('vi-VN') || 'N/A',
+      new Date(row.createdAt).toLocaleDateString('vi-VN'),
+      new Date(row.updatedAt).toLocaleDateString('vi-VN'),
+    ]);
+
+    const csvContent = [
+      csvHeader.join(','),
+      ...csvRows.map((row) => row.map((field) => `"${field}"`).join(',')),
+    ].join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    saveAs(blob, 'bookings.csv');
   };
 
   const columns = [
@@ -68,7 +102,7 @@ export default function ComplexTable(props) {
       ),
     }),
     columnHelper.accessor('total_price', {
-      header: 'Totel Price',
+      header: 'Total Price',
       cell: (info) => (
         <Text color={textColor} fontSize="sm" fontWeight="700">
           {formatPriceVND(info.getValue())}
@@ -79,7 +113,7 @@ export default function ComplexTable(props) {
       header: 'Hotel',
       cell: (info) => (
         <Text color={textColor} fontSize="sm" fontWeight="700">
-          {info.getValue() || 'N/A'}
+          {info.getValue() || ''}
         </Text>
       ),
     }),
@@ -137,7 +171,9 @@ export default function ComplexTable(props) {
         >
           List of Booking
         </Text>
-        <Menu />
+        <Button colorScheme="blue" onClick={exportToCSV}>
+          Export to CSV
+        </Button>
       </Flex>
       <Box>
         {isLoading ? (

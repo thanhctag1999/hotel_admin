@@ -262,7 +262,6 @@ export default function ComplexTable(props) {
         >
           List services
         </Text>
-        <Menu />
       </Flex>
       <Box>
         {isLoading ? (

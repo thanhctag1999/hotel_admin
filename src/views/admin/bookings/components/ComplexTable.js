@@ -101,6 +101,30 @@ export default function ComplexTable(props) {
     }),
   ];
 
+  const exportToCSV = () => {
+    const csvRows = [
+      columns.map((col) => col.header).join(','),
+      ...tableData.map((row) =>
+        columns
+          .map((col) => {
+            const accessor = col.accessorKey;
+            return accessor ? row[accessor] : '';
+          })
+          .join(','),
+      ),
+    ];
+    const csvContent = csvRows.join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.setAttribute('href', url);
+    link.setAttribute('download', 'table_data.csv');
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   const table = useReactTable({
     data: tableData,
     columns,
@@ -121,7 +145,11 @@ export default function ComplexTable(props) {
         >
           List of Users
         </Text>
-        <Menu />
+        <Flex>
+          <Button colorScheme="blue" onClick={exportToCSV} mr="4">
+            Export to CSV
+          </Button>
+        </Flex>
       </Flex>
       <Box>
         {isLoading ? (
