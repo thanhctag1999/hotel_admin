@@ -100,16 +100,21 @@ export default function HotelDetails() {
       borderRadius="md"
       bg="white"
     >
-      {/* Hotel Details */}
       <Image
-        src={hotel.imageHotel}
-        alt={hotel.hotelName}
+        src={`${API_URL}/${hotel.imageHotel}`}
+        alt={hotel.hotelName || 'Hotel Image'}
         borderRadius="md"
         boxShadow="md"
         objectFit="cover"
         w="full"
         h="300px"
+        onError={({ currentTarget }) => {
+          currentTarget.onerror = null; // Prevents infinite loop if fallback image fails
+          currentTarget.src =
+            'https://grandtouranehotel.com/uploads/product/sp_55.jpg';
+        }}
       />
+
       <Stack spacing={4} mt={4}>
         <Text fontSize="2xl" fontWeight="bold">
           {hotel.hotelName}

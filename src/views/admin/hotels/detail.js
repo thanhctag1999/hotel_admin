@@ -109,13 +109,17 @@ export default function HotelDetails() {
     >
       {/* Hotel Details */}
       <Image
-        src={hotel.imageHotel}
+        src={`${API_URL}/public/images/hotel/${hotel.imageHotel}`}
         alt={hotel.hotelName}
         borderRadius="md"
         boxShadow="md"
         objectFit="cover"
         w="full"
         h="300px"
+        onError={(e) => {
+          e.target.src =
+            'https://grandtouranehotel.com/uploads/product/sp_55.jpg';
+        }}
       />
       <Stack spacing={4} mt={4}>
         <Text fontSize="2xl" fontWeight="bold">
@@ -132,9 +136,6 @@ export default function HotelDetails() {
         </Text>
         <Text fontSize="sm" color="gray.500">
           Address: {hotel.address}
-        </Text>
-        <Text fontSize="sm" color="gray.500">
-          Type: {hotel.typeHotel}
         </Text>
         <Button mt={4} colorScheme="red">
           Delete

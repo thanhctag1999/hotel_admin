@@ -26,6 +26,8 @@ export default function Settings() {
         setIsLoading(false);
       }
     } catch (error) {
+      setIsLoading(false);
+      setTableDataComplex([]);
       console.error("Error fetching the comments data: ", error);
     }
   };

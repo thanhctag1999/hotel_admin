@@ -70,14 +70,6 @@ export default function ComplexTable(props) {
         </Text>
       ),
     }),
-    columnHelper.accessor('user_name', {
-      header: 'Username',
-      cell: (info) => (
-        <Text color={textColor} fontSize="sm" fontWeight="700">
-          {info.getValue()}
-        </Text>
-      ),
-    }),
     columnHelper.accessor('email', {
       header: 'Email',
       cell: (info) => (

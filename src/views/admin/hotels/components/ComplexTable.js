@@ -116,25 +116,6 @@ export default function ComplexTable(props) {
     navigate(`/admin/hotel/${hotelId}`);
   };
 
-  const handleExportCSV = () => {
-    const headers = columns.map((col) => col.header);
-    const rows = tableData.map((row) =>
-      columns.map((col) => row[col.accessorKey] || ''),
-    );
-    const csvContent = [headers, ...rows]
-      .map((row) => row.join(','))
-      .join('\n');
-
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.setAttribute('download', 'table_data.csv');
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
-
   return (
     <Card w="100%" px="0px" overflowX={{ sm: 'scroll', lg: 'hidden' }}>
       <Flex px="25px" mb="8px" justifyContent="space-between" align="center">
